@@ -1,18 +1,20 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
-import tkinter as tk
-
-import os
-from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
-from cryptography.hazmat.backends import default_backend
-from cryptography.hazmat.primitives import padding
 import base64
 import hashlib
+import json
+import os
+import tkinter as tk
+
+from cryptography.hazmat.backends import default_backend
+from cryptography.hazmat.primitives import padding
+from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 window=tk.Tk()
 window.title('bz rmq 解析')
 window.geometry('750x650')
-window.iconbitmap('ooopic_1535094442.ico')
+# window.resizable(width = False, height = False)
+window.iconbitmap('./ooopic_1535094442.ico')
 a = tk.Label(window,text='输入topic: ')
 a.place(x=18,y=10,anchor='nw')
 
@@ -78,17 +80,35 @@ def aes_ecb_decrypt(content, key):
     real_content = unpadder.update(dec_content) + unpadder.finalize()
     return real_content
 
-def hello():
+def parse():
     key = b.get()
     hexdigest_ = hashlib.md5(key.encode('utf-8')).hexdigest()[8:-8]
     print(hexdigest_)
     context = d.get("0.0", "end")
     decode = base64.b64decode(context)
-    decrypt = aes_ecb_decrypt(decode, hexdigest_)
-    print(decrypt.decode('utf-8'))
-    f.delete(1.0, tk.END)
-    f.insert(tk.END, decrypt.decode('utf-8'))
+    rs = aes_ecb_decrypt(decode, hexdigest_)
+    rs_decode = rs.decode('utf-8')
+    print(rs_decode)
+    loads = json.loads(rs_decode)
+    msgBody = loads['msgBody']
+    if msgBody.strip() == '':
+        print('msg body is null')
+    else:
+        try:
+            decdsdsode = base64.b64decode(msgBody)
+        except  Exception:
+            print("msg body 非密文")
+        else:
+            print("msg body 密文")
+            decryptss = aes_ecb_decrypt(decdsdsode, hashlib.md5(loads['msgType'].encode('utf-8')).hexdigest()[8:-8])
+            json_loadsss = json.loads(decryptss.decode('utf-8'))
+            loads['msgBody'] = json_loadsss
 
-a1 = tk.Button(None,text='解密', width=15, height=1, command=hello).place(x=390, y=7, anchor='nw')
+    f.delete(1.0, tk.END)
+    dumpsss = json.dumps(loads, sort_keys = True, indent = 4, separators = (',', ': '))
+
+    f.insert(tk.END, dumpsss)
+
+a1 = tk.Button(None,text='解密', width=15, height=1, command=parse).place(x=390, y=7, anchor='nw')
 
 tk.mainloop()
