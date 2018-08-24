@@ -12,7 +12,7 @@ from cryptography.hazmat.primitives.ciphers import Cipher, algorithms, modes
 
 window=tk.Tk()
 window.title('bz rmq 解析')
-window.geometry('750x650')
+window.geometry('1098x650')
 # window.resizable(width = False, height = False)
 window.iconbitmap('./ooopic_1535094442.ico')
 a = tk.Label(window,text='输入topic: ')
@@ -30,7 +30,7 @@ d.place(x=100,y=45,anchor='nw')
 
 e = tk.Label(window,text='明文: ').place(x=390,y=45,anchor='nw')
 
-f = tk.Text(window,height=40,width=30)
+f = tk.Text(window,height=40)
 f.place(x=450,y=45,anchor='nw')
 
 
@@ -105,7 +105,7 @@ def parse():
             loads['msgBody'] = json_loadsss
 
     f.delete(1.0, tk.END)
-    dumpsss = json.dumps(loads, sort_keys = True, indent = 4, separators = (',', ': '))
+    dumpsss = json.dumps(loads, sort_keys = True, indent = 2, separators = (',', ': '))
 
     f.insert(tk.END, dumpsss)
 
