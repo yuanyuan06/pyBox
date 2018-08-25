@@ -1,3 +1,6 @@
 /*.spec
 /.idea
 /build/
+/node_modules
+/venv
+/package-lock.json
