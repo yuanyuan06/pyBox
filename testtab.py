@@ -28,7 +28,23 @@ class ApplicationUi(Frame):
         os.remove("tmp.ico")
 
         self.master.title('my box')
-        self.master.geometry('1120x710')
+
+        # 得到屏幕宽度
+        sw = self.master.winfo_screenwidth()
+        # 得到屏幕高度
+        sh = self.master.winfo_screenheight()
+
+        ww = 1120
+        wh = 710
+        # 窗口宽高为100
+        x = (sw - ww)/2
+        y = (sh - wh)/2
+
+        self.master.deiconify()  # now window size was calculated
+        self.master.withdraw()  # hide window again
+        dfd = '%dx%d+%d+%d' % (ww, wh, x, y)
+        self.master.geometry(dfd)
+        self.master.deiconify()
         self.create_widgets()
 
     def create_widgets(self):
@@ -64,7 +80,6 @@ class ApplicationUi(Frame):
         self.f = Text(self.TabStrip1__Tab1, height=40)
         self.f.place(x=450, y=55, anchor='nw')
 
-        # Button(self.TabStrip1__Tab1, text='解密', width=15, height=1, command=parse(self)).place(x=390, y=7, anchor='nw')
         self.e = Button(self.TabStrip1__Tab1, text='解密', width=15, command=self.parse)
         self.e.place(x=390, y=17, anchor='nw')
 
