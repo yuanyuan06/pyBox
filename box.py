@@ -71,16 +71,22 @@ class ApplicationUi(Frame):
         self.TabStrip1.add(self.TabStrip1__Tab2, text='zk manager')
 
         # 隧道
-        self.TabStrip1__Tab2 = Frame(self.TabStrip1)
-        self.TabStrip1__Tab2Lbl = Label(self.TabStrip1__Tab2, text='敬请期待')
-        self.TabStrip1__Tab2Lbl.place(relx=0.1, rely=0.5)
-        self.TabStrip1.add(self.TabStrip1__Tab2, text='隧道')
+        self.TabStrip1__Tab3 = Frame(self.TabStrip1)
+        self.TabStrip1__Tab3Lbl = Label(self.TabStrip1__Tab3, text='敬请期待')
+        self.TabStrip1__Tab3Lbl.place(relx=0.1, rely=0.5)
+        self.TabStrip1.add(self.TabStrip1__Tab3, text='ssh 隧道')
+
+        # 时间戳转换
+        self.TabStrip1__Tab4 = Frame(self.TabStrip1)
+        self.TabStrip1__Tab4Lbl = Label(self.TabStrip1__Tab4, text='敬请期待')
+        self.TabStrip1__Tab4Lbl.place(relx=0.1, rely=0.5)
+        self.TabStrip1.add(self.TabStrip1__Tab4, text='时间戳转换')
 
         # 其他
-        self.TabStrip1__Tab2 = Frame(self.TabStrip1)
-        self.TabStrip1__Tab2Lbl = Label(self.TabStrip1__Tab2, text='敬请期待')
-        self.TabStrip1__Tab2Lbl.place(relx=0.1, rely=0.5)
-        self.TabStrip1.add(self.TabStrip1__Tab2, text='其他')
+        self.TabStrip1__Tab5 = Frame(self.TabStrip1)
+        self.TabStrip1__Tab5Lbl = Label(self.TabStrip1__Tab5, text='敬请期待')
+        self.TabStrip1__Tab5Lbl.place(relx=0.1, rely=0.5)
+        self.TabStrip1.add(self.TabStrip1__Tab5, text='其他')
 
 
     def parse(self):
