@@ -12,6 +12,7 @@ from tkinter.messagebox import *
 # import tkinter.simpledialog as tkSimpleDialog    #askstring()
 from aes_utils import Aesutils as aesutils
 from const.const import Const;
+from rmq_module import RmqUIPack;
 
 
 class ApplicationUi(Frame):
@@ -61,27 +62,7 @@ class ApplicationUi(Frame):
         self.TabStrip1__Tab1Lbl = Label(self.TabStrip1__Tab1)
         self.TabStrip1__Tab1Lbl.place(relx=0.1,rely=0.5)
         self.TabStrip1.add(self.TabStrip1__Tab1, text='bz rmq 解析')
-
-        self.a = Label(self.TabStrip1__Tab1, text='输入topic: ')
-        self.a.place(x=18, y=20, anchor='nw')
-
-        e = StringVar()
-        self.b = Entry(self.TabStrip1__Tab1, width=30, textvariable=e, font=('Calibri', '11'))
-        self.b.place(x=100, y=20, anchor='nw')
-
-        self.c = Label(self.TabStrip1__Tab1, text='输入密文: ')
-        self.c.place(x=20, y=55, anchor='nw')
-
-        self.d = Text(self.TabStrip1__Tab1, height=40, width=30)
-        self.d.place(x=100, y=55, anchor='nw')
-
-        self.e = Label(self.TabStrip1__Tab1, text='明文: ').place(x=390, y=45, anchor='nw')
-
-        self.f = Text(self.TabStrip1__Tab1, height=40)
-        self.f.place(x=450, y=55, anchor='nw')
-
-        self.e = Button(self.TabStrip1__Tab1, text='解密', width=15, command=self.parse)
-        self.e.place(x=390, y=17, anchor='nw')
+        RmqUIPack.pack_rmq_ui(self)
 
         # zk manager
         self.TabStrip1__Tab2 = Frame(self.TabStrip1)
