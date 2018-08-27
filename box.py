@@ -54,7 +54,7 @@ class ApplicationUi(Frame):
         self.top = self.winfo_toplevel()
         self.style = Style()
         self.top.config(menu=box_menu)
-        self.TabStrip1 = Notebook(self.top)
+        self.TabStrip1 =  Notebook(self.top)
         self.TabStrip1.place(relx=0.032, rely=0.045, relwidth=0.937, relheight=0.899)
 
         # rmq 解析
@@ -109,7 +109,7 @@ class ApplicationUi(Frame):
                 loads['msgBody'] = json_loadsss
 
         self.f.delete(1.0, END)
-        dumpsss = json.dumps(loads, sort_keys=True, indent=2, separators=(',', ': '))
+        dumpsss = json.dumps(loads, sort_keys=True, ensure_ascii=False, indent=2, separators=(',', ': '))
 
         self.f.insert(END, dumpsss)
 
