@@ -3,6 +3,7 @@ import base64
 import hashlib
 import json
 import os, sys
+import time, datetime
 from tkinter import *
 
 from tkinter.font import Font
@@ -78,9 +79,16 @@ class ApplicationUi(Frame):
 
         # 时间戳转换
         self.TabStrip1__Tab4 = Frame(self.TabStrip1)
-        self.TabStrip1__Tab4Lbl = Label(self.TabStrip1__Tab4, text='敬请期待')
+        self.TabStrip1__Tab4Lbl = Label(self.TabStrip1__Tab4)
         self.TabStrip1__Tab4Lbl.place(relx=0.1, rely=0.5)
-        self.TabStrip1.add(self.TabStrip1__Tab4, text='时间戳转换')
+        self.TabStrip1.add(self.TabStrip1__Tab4, text='速查')
+
+        Label(self.TabStrip1__Tab4, text="%Y-%m-%d %H:%M:%S", font=('Calibri', '9')).place(x=130, y=40, anchor='nw')
+        Button(self.TabStrip1__Tab4, text='时间戳\n 转 换', command=self.qt).place(x=20, y=25, anchor='nw')
+        self.qt1 = Entry(self.TabStrip1__Tab4, width=20, textvariable=Variable(), font=('Calibri', '11'))
+        self.qt1.place(x=130, y=20, anchor='nw')
+        self.qt2 = Entry(self.TabStrip1__Tab4, width=20, textvariable=Variable(), font=('Calibri', '11'))
+        self.qt2.place(x=130, y=55, anchor='nw')
 
         # 其他
         self.TabStrip1__Tab5 = Frame(self.TabStrip1)
@@ -88,6 +96,23 @@ class ApplicationUi(Frame):
         self.TabStrip1__Tab5Lbl.place(relx=0.1, rely=0.5)
         self.TabStrip1.add(self.TabStrip1__Tab5, text='其他')
 
+    def qt(self):
+
+        if(self.qt1.get().isdigit()):
+            print(int(self.qt1.get()))
+            localtime = time.localtime(int(self.qt1.get()))
+            otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
+            self.qt2.delete(0, END)
+            self.qt2.insert(END, otherStyleTime)
+        elif(len(self.qt1.get().strip()) <=0):
+            return
+        else:
+            # 2013-10-10 23:40:00
+            self.qt2.insert(END, self.qt1.get())
+            timeArray = time.strptime(self.qt1.get(), "%Y-%m-%d %H:%M:%S")
+            timeStamp = int(time.mktime(timeArray))
+            self.qt2.delete(0, END)
+            self.qt2.insert(END,timeStamp)
 
     def parse(self):
         key = self.b.get()
@@ -126,6 +151,8 @@ class Application(ApplicationUi):
     # 这个类实现具体的事件处理回调函数。界面生成代码在Application_ui中。
     def __init__(self, master=None):
         ApplicationUi.__init__(self, master)
+
+
 
 
 def hello():
