@@ -28,7 +28,7 @@ class ApplicationUi(Frame):
         self.master.iconbitmap("tmp.ico")
         os.remove("tmp.ico")
 
-        self.master.title('my box')
+        self.master.title('my box(version 1.1)')
 
         # 得到屏幕宽度
         sw = self.master.winfo_screenwidth()
