@@ -14,6 +14,7 @@ class SysTrayIcon(object):
     QUIT = 'QUIT'
     SPECIAL_ACTIONS = [QUIT]
     FIRST_ID = 1314
+
     def __init__(s,
                  icon,
                  hover_text,
@@ -50,7 +51,7 @@ class SysTrayIcon(object):
         s.classAtom = win32gui.RegisterClass(window_class)
 
     def show_icon(s):
-        # 创建窗口。
+        # 创建窗口.
         hinst = win32gui.GetModuleHandle(None)
         style = win32con.WS_OVERLAPPED | win32con.WS_SYSMENU
         s.hwnd = win32gui.CreateWindow(s.classAtom,
@@ -205,12 +206,13 @@ class SysTrayIcon(object):
         else:
             menu_action(s)
 
+
 class _Main:
     def main(s):
         import tkinter as tk
         s.root = tk.Tk()
-        icons = 'D:\\1.ico'
-        hover_text = "SysTrayIcon.py Demo" #悬浮于图标上方时的提示
+        icons = 'ooopic_1535094442.ico'
+        hover_text = "my box plus" #悬浮于图标上方时的提示
         menu_options = (('更改 图标', None, s.switch_icon),
                             ('二级 菜单', None, (('更改 图标', None, s.switch_icon),)))
         s.sysTrayIcon = SysTrayIcon(icons, hover_text, menu_options, on_quit = s.exit, default_menu_index = 1)
@@ -220,18 +222,19 @@ class _Main:
         s.root.resizable(0,0)
         Application(s.root).mainloop()
 
-    def switch_icon(s, _sysTrayIcon, icons = '../ooopic_1535094442.ico'):
+    def switch_icon(s, _sysTrayIcon, icons = 'ooopic_1535094442.ico'):
         _sysTrayIcon.icon = icons
         _sysTrayIcon.refresh_icon()
-        #点击右键菜单项目会传递SysTrayIcon自身给引用的函数，所以这里的_sysTrayIcon = s.sysTrayIcon
+        # 点击右键菜单项目会传递SysTrayIcon自身给引用的函数，所以这里的_sysTrayIcon = s.sysTrayIcon
 
-    def Unmap(s):
+    def unmap(s):
         s.root.withdraw()
         s.sysTrayIcon.show_icon()
 
     def exit(s, _sysTrayIcon = None):
         s.root.destroy()
-        print ('exit...')
+        print('exit...')
+
 
 if __name__ == '__main__':
     Main = _Main()

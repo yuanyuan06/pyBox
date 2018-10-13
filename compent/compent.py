@@ -143,11 +143,8 @@ class ApplicationUi(Frame):
 
         self.f.insert(END, dumpsss)
 
-
-
-
 class Application(ApplicationUi):
-    # 这个类实现具体的事件处理回调函数。界面生成代码在Application_ui中。
+    # 这个类实现具体的事件处理回调函数. 界面生成代码在Application_ui中.
     def __init__(self, master=None):
         ApplicationUi.__init__(self, master)
 
@@ -156,4 +153,3 @@ class Application(ApplicationUi):
 
 def hello():
     showinfo("关于", " 袁大师的工具箱\n qq:173171486 \n 接受bug 拒绝需求")
-    print("hhh")
