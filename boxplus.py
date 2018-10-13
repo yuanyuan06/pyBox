@@ -217,7 +217,7 @@ class _Main:
                             ('二级 菜单', None, (('更改 图标', None, s.switch_icon),)))
         s.sysTrayIcon = SysTrayIcon(icons, hover_text, menu_options, on_quit = s.exit, default_menu_index = 1)
 
-        s.root.bind("<Unmap>", lambda event: s.Unmap() if s.root.state() == 'iconic' else False)
+        s.root.bind("<Unmap>", lambda event: s.unmap() if s.root.state() == 'iconic' else False)
         s.root.protocol('WM_DELETE_WINDOW', s.exit)
         s.root.resizable(0,0)
         Application(s.root).mainloop()
