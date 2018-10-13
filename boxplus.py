@@ -1,3 +1,4 @@
+import base64
 import os
 import win32api
 import win32con
@@ -5,6 +6,7 @@ import win32gui_struct
 import win32gui
 
 from compent.compent import Application
+from const.const import Const
 
 Main = None
 
@@ -209,7 +211,7 @@ class _Main:
     def main(s):
         import tkinter as tk
         s.root = tk.Tk()
-        icons = 'ooopic_1535094442.ico'
+        icons = 'tmp.ico'
         hover_text = "my box plus" #悬浮于图标上方时的提示
         menu_options = (('更改 图标', None, s.switch_icon),
                             ('二级 菜单', None, (('更改 图标', None, s.switch_icon),)))
@@ -220,7 +222,7 @@ class _Main:
         s.root.resizable(0,0)
         Application(s.root).mainloop()
 
-    def switch_icon(s, _sysTrayIcon, icons = 'ooopic_1535094442.ico'):
+    def switch_icon(s, _sysTrayIcon, icons = 'tmp.ico'):
         _sysTrayIcon.icon = icons
         _sysTrayIcon.refresh_icon()
         # 点击右键菜单项目会传递SysTrayIcon自身给引用的函数，所以这里的_sysTrayIcon = s.sysTrayIcon
@@ -235,5 +237,10 @@ class _Main:
 
 
 if __name__ == '__main__':
+    rer = Const.topIcon
+    ico = bytes(rer, 'utf-8')
+    tmp = open("tmp.ico", "wb+")
+    tmp.write(base64.b64decode(ico))
+    tmp.close()
     Main = _Main()
     Main.main()

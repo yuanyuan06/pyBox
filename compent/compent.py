@@ -25,7 +25,7 @@ class ApplicationUi(Frame):
         tmp.write(base64.b64decode(ico))
         tmp.close()
         self.master.iconbitmap("tmp.ico")
-        os.remove("tmp.ico")
+        # os.remove("tmp.ico")
 
         self.master.title('my box(version 1.2)')
 
