@@ -157,9 +157,3 @@ class Application(ApplicationUi):
 def hello():
     showinfo("关于", " 袁大师的工具箱\n qq:173171486 \n 接受bug 拒绝需求")
     print("hhh")
-
-
-
-if __name__ == "__main__":
-    top = Tk()
-    Application(top).mainloop()
