@@ -1,4 +1,3 @@
-# 最小化到托盘
 import os
 import win32api
 import win32con
@@ -68,7 +67,6 @@ class SysTrayIcon(object):
         win32gui.UpdateWindow(s.hwnd)
         s.notify_id = None
         s.refresh_icon()
-
         win32gui.PumpMessages()
 
     def show_menu(s):
@@ -186,7 +184,7 @@ class SysTrayIcon(object):
         # 填满背景。
         brush = win32gui.GetSysColorBrush(win32con.COLOR_MENU)
         win32gui.FillRect(hdcBitmap, (0, 0, 16, 16), brush)
-        # "GetSysColorBrush返回缓存的画笔而不是分配新的画笔。"
+        # "GetSysColorBrush返回缓存的画笔而不是分配新的画笔."
         #  - 暗示没有DeleteObject
         # 画出图标
         win32gui.DrawIconEx(hdcBitmap, 0, 0, hicon, ico_x, ico_y, 0, 0, win32con.DI_NORMAL)
