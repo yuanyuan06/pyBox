@@ -148,7 +148,8 @@ class SysTrayIcon(object):
         else:  # 找不到图标文件 - 使用默认值
             hicon = win32gui.LoadIcon(0, win32con.IDI_APPLICATION)
 
-        if self.notify_id: message = win32gui.NIM_MODIFY
+        if self.notify_id:
+            message = win32gui.NIM_MODIFY
         else: message = win32gui.NIM_ADD
         self.notify_id = (self.hwnd,
                           0,
