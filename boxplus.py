@@ -7,6 +7,7 @@ import win32gui
 
 from compent.compent import Application
 from const.const import Const
+import tkinter as tk
 
 Main = None
 
@@ -45,10 +46,10 @@ class SysTrayIcon(object):
         window_class = win32gui.WNDCLASS()
         window_class.hInstance = win32gui.GetModuleHandle(None)
         window_class.lpszClassName = s.window_class_name
-        window_class.style = win32con.CS_VREDRAW | win32con.CS_HREDRAW;
+        window_class.style = win32con.CS_VREDRAW | win32con.CS_HREDRAW
         window_class.hCursor = win32gui.LoadCursor(0, win32con.IDC_ARROW)
         window_class.hbrBackground = win32con.COLOR_WINDOW
-        window_class.lpfnWndProc = message_map #也可以指定wndproc.
+        window_class.lpfnWndProc = message_map  # 也可以指定wndproc.
         s.classAtom = win32gui.RegisterClass(window_class)
 
     def show_icon(s):
@@ -74,7 +75,7 @@ class SysTrayIcon(object):
     def show_menu(s):
         menu = win32gui.CreatePopupMenu()
         s.create_menu(menu, s.menu_options)
-        #win32gui.SetMenuDefaultItem(menu, 1000, 0)
+        # win32gui.SetMenuDefaultItem(menu, 1000, 0)
 
         pos = win32gui.GetCursorPos()
         # See http://msdn.microsoft.com/library/default.asp?url=/library/en-us/winui/menus_0hdi.asp
@@ -96,7 +97,8 @@ class SysTrayIcon(object):
 
     def notify(s, hwnd, msg, wparam, lparam):
         if lparam == win32con.WM_LBUTTONDBLCLK: # 双击左键
-            pass #s.execute_menu_option(s.default_menu_index + s.FIRST_ID)
+            # s.execute_menu_option(s.default_menu_index + s.FIRST_ID)
+            pass
         elif lparam == win32con.WM_RBUTTONUP: # 单击右键
             s.show_menu()
         elif lparam == win32con.WM_LBUTTONUP: # 单击左键
@@ -134,7 +136,7 @@ class SysTrayIcon(object):
 
     def refresh_icon(s, **data):
         hinst = win32gui.GetModuleHandle(None)
-        if os.path.isfile(s.icon): # 尝试找到自定义图标
+        if os.path.isfile(s.icon):  # 尝试找到自定义图标
             icon_flags = win32con.LR_LOADFROMFILE | win32con.LR_DEFAULTSIZE
             hicon = win32gui.LoadImage(hinst,
                                        s.icon,
@@ -142,7 +144,7 @@ class SysTrayIcon(object):
                                        0,
                                        0,
                                        icon_flags)
-        else: # 找不到图标文件 - 使用默认值
+        else:  # 找不到图标文件 - 使用默认值
             hicon = win32gui.LoadIcon(0, win32con.IDI_APPLICATION)
 
         if s.notify_id: message = win32gui.NIM_MODIFY
@@ -173,25 +175,26 @@ class SysTrayIcon(object):
                                                                 hSubMenu=submenu)
                 win32gui.InsertMenuItem(menu, 0, 1, item)
 
+    @staticmethod
     def prep_menu_icon(s, icon):
-        # 首先加载图标。
+        # 首先加载图标.
         ico_x = win32api.GetSystemMetrics(win32con.SM_CXSMICON)
         ico_y = win32api.GetSystemMetrics(win32con.SM_CYSMICON)
         hicon = win32gui.LoadImage(0, icon, win32con.IMAGE_ICON, ico_x, ico_y, win32con.LR_LOADFROMFILE)
 
-        hdcBitmap = win32gui.CreateCompatibleDC(0)
-        hdcScreen = win32gui.GetDC(0)
-        hbm = win32gui.CreateCompatibleBitmap(hdcScreen, ico_x, ico_y)
-        hbmOld = win32gui.SelectObject(hdcBitmap, hbm)
+        hdc_bit_map = win32gui.CreateCompatibleDC(0)
+        hdc_screen = win32gui.GetDC(0)
+        hbm = win32gui.CreateCompatibleBitmap(hdc_screen, ico_x, ico_y)
+        hbm_old = win32gui.SelectObject(hdc_bit_map, hbm)
         # 填满背景。
         brush = win32gui.GetSysColorBrush(win32con.COLOR_MENU)
-        win32gui.FillRect(hdcBitmap, (0, 0, 16, 16), brush)
+        win32gui.FillRect(hdc_bit_map, (0, 0, 16, 16), brush)
         # "GetSysColorBrush返回缓存的画笔而不是分配新的画笔."
         #  - 暗示没有DeleteObject
         # 画出图标
-        win32gui.DrawIconEx(hdcBitmap, 0, 0, hicon, ico_x, ico_y, 0, 0, win32con.DI_NORMAL)
-        win32gui.SelectObject(hdcBitmap, hbmOld)
-        win32gui.DeleteDC(hdcBitmap)
+        win32gui.DrawIconEx(hdc_bit_map, 0, 0, hicon, ico_x, ico_y, 0, 0, win32con.DI_NORMAL)
+        win32gui.SelectObject(hdc_bit_map, hbm_old)
+        win32gui.DeleteDC(hdc_bit_map)
 
         return hbm
 
@@ -209,29 +212,30 @@ class SysTrayIcon(object):
 
 class _Main:
     def main(s):
-        import tkinter as tk
-        s.root = tk.Tk()
-        icons = 'tmp.ico'
-        hover_text = "my box plus" #悬浮于图标上方时的提示
-        menu_options = (('更改 图标', None, s.switch_icon),
-                            ('二级 菜单', None, (('更改 图标', None, s.switch_icon),)))
-        s.sysTrayIcon = SysTrayIcon(icons, hover_text, menu_options, on_quit = s.exit, default_menu_index = 1)
-
-        s.root.bind("<Unmap>", lambda event: s.unmap() if s.root.state() == 'iconic' else False)
-        s.root.protocol('WM_DELETE_WINDOW', s.exit)
-        s.root.resizable(0,0)
+        # s.root.resizable(0,0)
         Application(s.root).mainloop()
 
-    def switch_icon(s, _sysTrayIcon, icons = 'tmp.ico'):
-        _sysTrayIcon.icon = icons
-        _sysTrayIcon.refresh_icon()
+    def __init__(s):
+        s.root = tk.Tk()
+        icons = 'tmp.ico'
+        hover_text = "my box plus"  # 悬浮于图标上方时的提示
+        menu_options = (('一级菜单', None, s.switch_icon),
+                        ('二级菜单', None, (('哇哈哈', None, s.switch_icon),)))
+        s.sysTrayIcon = SysTrayIcon(icons, hover_text, menu_options, on_quit=s.exit, default_menu_index=1)
+        s.root.bind("<Unmap>", lambda event: s.unmap() if s.root.state() == 'iconic' else False)
+        s.root.protocol('WM_DELETE_WINDOW', s.exit)
+
+    @staticmethod
+    def switch_icon(s, _sys_tray_icon, icons='tmp.ico'):
+        _sys_tray_icon.icon = icons
+        _sys_tray_icon.refresh_icon()
         # 点击右键菜单项目会传递SysTrayIcon自身给引用的函数，所以这里的_sysTrayIcon = s.sysTrayIcon
 
     def unmap(s):
         s.root.withdraw()
         s.sysTrayIcon.show_icon()
 
-    def exit(s, _sysTrayIcon = None):
+    def exit(s, _sys_tray_icon=None):
         s.root.destroy()
         print('exit...')
 
