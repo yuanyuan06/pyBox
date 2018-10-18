@@ -131,6 +131,8 @@ class ApplicationUi(Frame):
                 decdsdsode = base64.b64decode(msgBody)
             except  Exception:
                 print("msg body 非密文")
+                json_loads = json.loads(msgBody)
+                loads['msgBody'] = json_loads
             else:
                 print("msg body 密文")
                 decryptss = aesutils.aes_ecb_decrypt(decdsdsode,
