@@ -1,4 +1,7 @@
+import atexit
 import base64
+import cProfile
+import gc
 import os
 import win32api
 import win32con
@@ -171,7 +174,7 @@ class SysTrayIcon(object):
                 win32gui.InsertMenuItem(menu, 0, 1, item)
             else:
                 submenu = win32gui.CreatePopupMenu()
-                s.create_menu(submenu, option_action)
+                self.create_menu(submenu, option_action)
                 item, extras = win32gui_struct.PackMENUITEMINFO(text=option_text,
                                                                 hbmpItem=option_icon,
                                                                 hSubMenu=submenu)
@@ -243,10 +246,15 @@ class _Main:
 
 
 if __name__ == '__main__':
+
+    gc.disable()
+    gc.set_threshold(0)
+    atexit.register(os._exit, 0)
     rer = Const.topIcon
     ico = bytes(rer, 'utf-8')
     tmp = open("tmp.ico", "wb+")
     tmp.write(base64.b64decode(ico))
     tmp.close()
     Main = _Main()
-    Main.main()
+    cProfile.run(Main.main(), filename="result.out", sort="cumulative")
+

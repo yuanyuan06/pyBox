@@ -2,14 +2,13 @@
 import base64
 import hashlib
 import json
-import os
+import multiprocessing
+import threading
 import time
+from multiprocessing import Pipe
 from tkinter import *
 from tkinter.messagebox import *
 from tkinter.ttk import *
-
-# import tkinter.filedialog as tkFileDialog
-# import tkinter.simpledialog as tkSimpleDialog    #askstring()
 from aes_utils import Aesutils as aesutils
 from const.const import Const;
 from rmq_module import RmqUIPack;
@@ -98,7 +97,7 @@ class ApplicationUi(Frame):
     def qt(self):
 
         if(self.qt1.get().isdigit()):
-            print(int(self.qt1.get()))
+            # print(int(self.qt1.get()))
             localtime = time.localtime(int(self.qt1.get()))
             otherStyleTime = time.strftime("%Y-%m-%d %H:%M:%S", localtime)
             self.qt2.delete(0, END)
@@ -106,7 +105,6 @@ class ApplicationUi(Frame):
         elif(len(self.qt1.get().strip()) <=0):
             return
         else:
-            # 2013-10-10 23:40:00
             self.qt2.insert(END, self.qt1.get())
             timeArray = time.strptime(self.qt1.get(), "%Y-%m-%d %H:%M:%S")
             timeStamp = int(time.mktime(timeArray))
@@ -114,44 +112,61 @@ class ApplicationUi(Frame):
             self.qt2.insert(END,timeStamp)
 
     def parse(self):
-        key = self.b.get()
-        hexdigest_ = hashlib.md5(key.encode('utf-8')).hexdigest()[8:-8]
-        print(hexdigest_)
+        key = self.b.get();
         context = self.d.get("0.0", "end")
-        decode = base64.b64decode(context)
-        rs = aesutils.aes_ecb_decrypt(decode, hexdigest_)
-        rs_decode = rs.decode('utf-8')
-        print(rs_decode)
-        loads = json.loads(rs_decode)
-        msgBody = loads['msgBody']
-        if msgBody.strip() == '':
-            print('msg body is null')
-        else:
-            try:
-                decdsdsode = base64.b64decode(msgBody)
-            except  Exception:
-                print("msg body 非密文")
-                json_loads = json.loads(msgBody)
-                loads['msgBody'] = json_loads
-            else:
-                print("msg body 密文")
-                decryptss = aesutils.aes_ecb_decrypt(decdsdsode,
-                                                     hashlib.md5(loads['msgType'].encode('utf-8')).hexdigest()[8:-8])
-                json_loadsss = json.loads(decryptss.decode('utf-8'))
-                loads['msgBody'] = json_loadsss
+        conn_1, conn_2 = Pipe()
+        # process = multiprocessing.Process(target=self.procParse, args=(conn_1, key, context))
+        # process.start()
+        thread = threading.Thread(target=procParse, args=(conn_1, key, context))
+        thread.start()
 
+        recv = conn_2.recv()
+        conn_2.close()
+        thread.join()
         self.f.delete(1.0, END)
-        dumpsss = json.dumps(loads, sort_keys=True, ensure_ascii=False, indent=2, separators=(',', ': '))
+        self.f.insert(END, recv)
+        return
 
-        self.f.insert(END, dumpsss)
+def procParse(pipe, key, context):
+    hexdigest_ = hashlib.md5(key.encode('utf-8')).hexdigest()[8:-8]
+    # print(hexdigest_)
+    decode = base64.b64decode(context)
+    rs = aesutils.aes_ecb_decrypt(decode, hexdigest_)
+    rs_decode = rs.decode('utf-8')
+    # print(rs_decode)
+
+    loads = json.loads(rs_decode)
+    del rs_decode, rs, decode, context
+    msgBody = loads['msgBody']
+    if msgBody.strip() == '':
+        print('msg body is null')
+    else:
+        try:
+            decdsdsode = base64.b64decode(msgBody)
+        except Exception:
+            print("msg body 非密文")
+            json_loads = json.loads(msgBody)
+            loads['msgBody'] = json_loads
+            del json_loads
+
+        else:
+            print("msg body 密文")
+            decryptss = aesutils.aes_ecb_decrypt(decdsdsode,
+                                                 hashlib.md5(loads['msgType'].encode('utf-8')).hexdigest()[8:-8])
+            json_loadsss = json.loads(decryptss.decode('utf-8'))
+            loads['msgBody'] = json_loadsss
+            del msgBody, decdsdsode, decryptss, json_loadsss
+
+    resss = json.dumps(loads, sort_keys=True, ensure_ascii=False, indent=2, separators=(',', ': '))
+    del loads
+    pipe.send(resss)
+    pipe.close
+
 
 class Application(ApplicationUi):
     # 这个类实现具体的事件处理回调函数. 界面生成代码在Application_ui中.
     def __init__(self, master=None):
         ApplicationUi.__init__(self, master)
-
-
-
 
 def hello():
     showinfo("关于", " 袁大师的工具箱\n qq:173171486 \n 接受bug 拒绝需求")
