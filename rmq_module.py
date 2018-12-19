@@ -23,7 +23,7 @@ class RmqUIPack:
         top.c = Label(top.TabStrip1__Tab1, text='输入密文: ')
         top.c.place(x=20, y=55, anchor='nw')
 
-        top.d = Text(top.TabStrip1__Tab1, height=40, width=30)
+        top.d = Text(top.TabStrip1__Tab1, height=40, width=30, wrap='none')
         top.d.place(x=100, y=55, anchor='nw')
 
         top.e = Label(top.TabStrip1__Tab1, text='明文: ').place(x=390, y=45, anchor='nw')

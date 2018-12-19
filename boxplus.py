@@ -256,5 +256,6 @@ if __name__ == '__main__':
     tmp.write(base64.b64decode(ico))
     tmp.close()
     Main = _Main()
-    cProfile.run(Main.main(), filename="result.out", sort="cumulative")
+    Main.main()
+    # cProfile.run(Main.main(), filename="result.out", sort="cumulative")
 
