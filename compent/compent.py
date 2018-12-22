@@ -9,9 +9,10 @@ from multiprocessing import Pipe
 from tkinter import *
 from tkinter.messagebox import *
 from tkinter.ttk import *
+from const.const import Const
+from rmq_module import RmqUIPack
 from aes_utils import Aesutils as aesutils
-from const.const import Const;
-from rmq_module import RmqUIPack;
+
 
 
 class ApplicationUi(Frame):
@@ -23,7 +24,7 @@ class ApplicationUi(Frame):
         tmp = open("tmp.ico", "wb+")
         tmp.write(base64.b64decode(ico))
         tmp.close()
-        self.master.iconbitmap("tmp.ico")
+        # self.master.iconbitmap("tmp.ico")
         # os.remove("tmp.ico")
 
         self.master.title('my box(version 1.2)')
@@ -47,7 +48,7 @@ class ApplicationUi(Frame):
         self.create_widgets()
 
     def create_widgets(self):
-        box_menu = Menu(self)
+        box_menu =  Menu(self)
         box_menu.add_command(label="关于", command=hello)
 
         self.top = self.winfo_toplevel()
